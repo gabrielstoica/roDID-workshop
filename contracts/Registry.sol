@@ -8,6 +8,7 @@ contract Registry is IRegistry {
   //////////////////////////////////////////////////////////////////////////*/
 
   address public owner;
+  address public resolver;
 
   mapping(address => Identity) public identity;
 
@@ -31,6 +32,7 @@ contract Registry is IRegistry {
 
   constructor(address initialOwner) {
     owner = initialOwner;
+    resolver = msg.sender;
     emit TransferOwnership({ oldOwner: address(0), newOwner: initialOwner });
   }
 
@@ -45,6 +47,11 @@ contract Registry is IRegistry {
 
   modifier onlyController(address publicKey) {
     if (msg.sender != identity[publicKey].controller) revert Unauthorized();
+    _;
+  }
+
+  modifier onlyResolver() {
+    if (msg.sender != resolver) revert Unauthorized();
     _;
   }
 
@@ -75,7 +82,7 @@ contract Registry is IRegistry {
                                 ADMIN METHODS
   //////////////////////////////////////////////////////////////////////////*/
 
-  function transferOwnership(address newOwner) public onlyOwner {
+  function transferOwnership(address newOwner) public onlyResolver {
     if (newOwner == address(0)) revert InvalidOwnerAddress();
     _transferOwnership(newOwner);
   }
