@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.18;
+
+interface IResolver {
+  /*//////////////////////////////////////////////////////////////////////////
+                                EVENTS
+  //////////////////////////////////////////////////////////////////////////*/
+  event CreateRegistry(address indexed owner, address indexed registry);
+
+  /*//////////////////////////////////////////////////////////////////////////
+                                MANAGEMENT METHODS
+  //////////////////////////////////////////////////////////////////////////*/
+
+  function createRegistry(address owner) external returns (address);
+
+  function getRegistry(address registryOwner) external view returns (address);
+}

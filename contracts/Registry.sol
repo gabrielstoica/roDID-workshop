@@ -7,7 +7,7 @@ contract Registry is IRegistry {
                                 PUBLIC STORAGE
   //////////////////////////////////////////////////////////////////////////*/
 
-  address public owner;
+  address owner;
   address public resolver;
 
   mapping(address => Identity) public identity;
@@ -59,30 +59,38 @@ contract Registry is IRegistry {
                                 MANAGEMENT METHODS
   //////////////////////////////////////////////////////////////////////////*/
 
-  function addIdentity(address publicKey, string memory did, string[] memory documents) public onlyOwner {
+  function addIdentity(address attendee, string memory did, string[] memory documents) external onlyOwner {
     Identity memory newIdentity = Identity(true, owner, did, documents);
-    identity[publicKey] = newIdentity;
+    identity[attendee] = newIdentity;
 
-    emit AddIdentity(publicKey, owner, did, documents);
+    emit AddIdentity(attendee, owner, did, documents);
   }
 
-  function updateIdentityStatus(address publicKey, bool newStatus) public onlyController(publicKey) {
-    identity[publicKey].status = newStatus;
+  function updateIdentityStatus(address attendee, bool newStatus) external onlyController(attendee) {
+    identity[attendee].status = newStatus;
 
-    emit UpdateIdentityStatus(publicKey, newStatus);
+    emit UpdateIdentityStatus(attendee, newStatus);
   }
 
-  function addIdentityDocument(address publicKey, string memory document) public onlyController(publicKey) {
+  function addIdentityDocument(address publicKey, string memory document) external onlyController(publicKey) {
     identity[publicKey].documents.push(document);
 
     emit AddIdentityDocument(publicKey, document);
   }
 
   /*//////////////////////////////////////////////////////////////////////////
+                                PUBLIC FACING METHODS
+  //////////////////////////////////////////////////////////////////////////*/
+
+  function getOwner() external view returns (address) {
+    return owner;
+  }
+
+  /*//////////////////////////////////////////////////////////////////////////
                                 ADMIN METHODS
   //////////////////////////////////////////////////////////////////////////*/
 
-  function transferOwnership(address newOwner) public onlyResolver {
+  function transferOwnership(address newOwner) external onlyResolver {
     if (newOwner == address(0)) revert InvalidOwnerAddress();
     _transferOwnership(newOwner);
   }
