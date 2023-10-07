@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "dotenv": "^16.0.3",
+    "ipfs-http-client": "50.1.2",
     "prettier-plugin-solidity": "^1.1.3"
   }
 }
