@@ -24,9 +24,6 @@ async function main() {
   const tx = await resolver.createRegistry(registryOwner.address);
   const registry = await tx.wait(1);
 
-  const registryAddress = await resolver.getRegistry(registryOwner.address);
-  console.log(registryAddress);
-
   console.log(`Registry contract address: ${registry.logs[0].address}`);
 }
 

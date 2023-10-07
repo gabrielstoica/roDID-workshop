@@ -1,3 +1,4 @@
+import { ethers } from "hardhat";
 import { create } from "ipfs-http-client";
 
 async function main() {
@@ -12,17 +13,17 @@ async function main() {
     timeout: 100000,
   });
 
-  const attendeeAddress = "";
+  const [_, registryOwner, attendee] = await ethers.getSigners();
 
   const document = {
     "@context": ["https://www.w3.org/ns/did/v1", "https://w3id.org/security/suites/ed25519-2020/v1"],
-    id: "did:registry:123456789abcdefghi",
+    id: `did:registry:${attendee.address}`,
     authentication: [
       {
-        id: `did:registry:${attendeeAddress}`,
+        id: `did:registry:${attendee.address}`,
         type: "EcdsaSecp256k1RecoveryMethod2020",
-        controller: `did:registry:${attendeeAddress}`,
-        blockchainAccountId: `eip155:1:${attendeeAddress}`,
+        controller: `did:registry:${attendee.address}`,
+        blockchainAccountId: `eip155:1:${attendee.address}`,
       },
     ],
   };
