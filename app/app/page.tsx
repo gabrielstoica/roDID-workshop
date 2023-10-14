@@ -6,20 +6,25 @@ import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 
 export default function Home() {
-  const { address, isConnecting, isDisconnected, isConnected } = useAccount();
+  const { address, isConnecting, isConnected } = useAccount();
 
   const [role, setRole] = useState<string>("");
   const router = useRouter();
 
+  const accessPage = () => {
+    if (role === "attendee") {
+      router.push("/attendee");
+    } else if (role === "verifier") {
+      router.push("/verifier");
+    }
+  };
+
   useEffect(() => {
     if (isConnected) {
-      if (role === "attendee") {
-        router.push("/attendee");
-      } else if (role === "verifier") {
-        router.push("/verifier");
-      }
+      accessPage();
     }
   }, [isConnected]);
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col items-center justify-center px-6 py-12 lg:px-8">
@@ -60,10 +65,19 @@ export default function Home() {
                   </div>
                 </div>
               </fieldset>
-              {role && (
+              {!isConnected ? (
                 <div className="mt-5 flex items-center justify-center">
                   {isConnecting ? <div>Connecting...</div> : <ConnectKitButton />}
                 </div>
+              ) : (
+                role && (
+                  <button
+                    className="mt-5 justify-center rounded-md bg-gray-600 px-2 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+                    onClick={accessPage}
+                  >
+                    Access
+                  </button>
+                )
               )}
             </div>
           </div>
