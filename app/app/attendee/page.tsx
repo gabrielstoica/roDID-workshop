@@ -16,9 +16,11 @@ export default function Home() {
   const [error, setError] = useState<string>();
   const [did, setDid] = useState<string>();
 
+  const messageToSign = "Sign in with Ethereum wallet to verify your identity!";
+
   const getAttendeeDid = async () => {
     setLoading(true);
-    const signature = await signMessage({ message: "Sign in with Ethereum wallet to verify your identity!" });
+    const signature = await signMessage({ message: messageToSign });
 
     try {
       const data = await readContract({
@@ -26,6 +28,11 @@ export default function Home() {
         abi: [
           {
             inputs: [
+              {
+                internalType: "string",
+                name: "message",
+                type: "string",
+              },
               {
                 internalType: "bytes",
                 name: "signature",
@@ -45,8 +52,9 @@ export default function Home() {
           },
         ],
         functionName: "getIdentity",
-        args: [signature],
+        args: [messageToSign, signature],
       });
+
       setDid(data as string);
     } catch (error) {
       console.log(error);
