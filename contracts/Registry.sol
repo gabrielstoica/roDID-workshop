@@ -99,6 +99,16 @@ contract Registry is IRegistry {
     return did;
   }
 
+  function verifyIdentity(string memory did, address attendee) external view returns (bool) {
+    Identity memory attendeeIdentity = identity[attendee];
+    string memory attendeeDid = attendeeIdentity.did;
+
+    if (bytes(did).length != bytes(attendeeDid).length) {
+      return false;
+    }
+    return keccak256(abi.encodePacked(did)) == keccak256(abi.encodePacked(attendeeDid));
+  }
+
   /*//////////////////////////////////////////////////////////////////////////
                                 ADMIN METHODS
   //////////////////////////////////////////////////////////////////////////*/
