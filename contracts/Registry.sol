@@ -87,9 +87,9 @@ contract Registry is IRegistry {
     return owner;
   }
 
-  function getIdentity(bytes memory signature) external view returns (string memory) {
-    bytes32 message = craftMessage();
-    address attendee = recoverSigner(message, signature);
+  function getIdentity(string memory message, bytes memory signature) external view returns (string memory) {
+    bytes32 messageHash = prefixMessage(message);
+    address attendee = recoverSigner(messageHash, signature);
 
     Identity memory attendeeIdentity = identity[attendee];
     string memory did = attendeeIdentity.did;
@@ -152,8 +152,7 @@ contract Registry is IRegistry {
   /// @notice Prefixes the provided hash with "\x19Ethereum Signed Message:\n" + len(message) and then hashes the result
   /// @dev This is used to comply with the Ethereum's default signing scheme
   /// @return The prefixed and hashed value
-  function craftMessage() internal pure returns (bytes32) {
-    bytes memory message = "Sign in with Ethereum wallet to verify your identity!";
+  function prefixMessage(string memory message) internal pure returns (bytes32) {
     return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n53", message));
   }
 }
