@@ -1,1 +1,1 @@
-![diagram_white](https://github.com/gabrielstoica/roDID-workshop/assets/33158000/caa6af62-3703-42ac-8a78-0189c6488964)
+![diagram_white](https://github.com/gabrielstoica/roDID-workshop/assets/33158000/5ecf864e-e762-4860-b263-b5b0e81a4e0f)
